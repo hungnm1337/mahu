@@ -1,0 +1,468 @@
+PRAGMA foreign_keys = ON;
+
+-- ============================================================
+-- DATABASE : Vocabulary Learning App
+-- Database : SQLite
+-- Version  : 1.0
+-- ============================================================
+
+-- ============================================================
+-- APP SETTINGS
+-- Chỉ có đúng 1 bản ghi.
+-- Lưu toàn bộ thông tin và cấu hình của ứng dụng.
+-- ============================================================
+
+CREATE TABLE AppSettings (
+
+    -- Chỉ có một dòng duy nhất
+    Id INTEGER PRIMARY KEY CHECK (Id = 1),
+
+    -------------------------------------------------------
+    -- PROFILE
+    -------------------------------------------------------
+
+    -- Tên người dùng
+    DisplayName TEXT NOT NULL DEFAULT 'User',
+
+    -- Đường dẫn ảnh đại diện
+    Avatar TEXT,
+
+    -------------------------------------------------------
+    -- LEARNING
+    -------------------------------------------------------
+
+    -- Tổng XP
+    TotalXP INTEGER NOT NULL DEFAULT 0,
+
+    -- Level hiện tại
+    Level INTEGER NOT NULL DEFAULT 1,
+
+    -- Chuỗi học liên tiếp
+    CurrentStreak INTEGER NOT NULL DEFAULT 0,
+
+    -- Ngày học gần nhất
+    LastActiveDate TEXT,
+
+    -- Tổng thời gian học (phút)
+    TotalStudyTime INTEGER NOT NULL DEFAULT 0,
+
+    -- Tổng số từ đã học
+    TotalWordsLearned INTEGER NOT NULL DEFAULT 0,
+
+    -- Tổng số Quiz đã làm
+    TotalQuizPlayed INTEGER NOT NULL DEFAULT 0,
+
+    -- Tổng câu trả lời đúng
+    TotalCorrectAnswers INTEGER NOT NULL DEFAULT 0,
+
+    -- Tổng câu trả lời sai
+    TotalWrongAnswers INTEGER NOT NULL DEFAULT 0,
+
+    -------------------------------------------------------
+    -- DAILY GOAL
+    -------------------------------------------------------
+
+    -- Mục tiêu số từ mỗi ngày
+    DailyWordGoal INTEGER NOT NULL DEFAULT 20,
+
+    -- Mục tiêu thời gian học (phút)
+    DailyStudyTimeGoal INTEGER NOT NULL DEFAULT 30,
+
+    -------------------------------------------------------
+    -- APPEARANCE
+    -------------------------------------------------------
+
+    -- Light
+    -- Dark
+    -- System
+    Theme TEXT NOT NULL DEFAULT 'System',
+
+    -- vi-VN
+    -- en-US
+    Language TEXT NOT NULL DEFAULT 'en-US',
+
+    -------------------------------------------------------
+    -- PRONUNCIATION
+    -------------------------------------------------------
+
+    -- Tự động phát âm
+    AutoPlayPronunciation INTEGER NOT NULL DEFAULT 1,
+
+    -- Tốc độ đọc
+    SpeechRate REAL NOT NULL DEFAULT 1.0,
+
+    -- Âm lượng
+    SpeechVolume INTEGER NOT NULL DEFAULT 100,
+
+    -- Giọng đọc
+    SpeechVoice TEXT,
+
+    -------------------------------------------------------
+    -- QUIZ
+    -------------------------------------------------------
+
+    -- Số câu mặc định
+    DefaultQuizQuestionCount INTEGER NOT NULL DEFAULT 20,
+
+    -- Trộn câu hỏi
+    ShuffleQuestions INTEGER NOT NULL DEFAULT 1,
+
+    -- Trộn đáp án
+    ShuffleAnswers INTEGER NOT NULL DEFAULT 1,
+
+    -------------------------------------------------------
+    -- BACKUP
+    -------------------------------------------------------
+
+    AutoBackup INTEGER NOT NULL DEFAULT 0,
+
+    BackupFolder TEXT,
+
+    -------------------------------------------------------
+    -- REMINDER
+    -------------------------------------------------------
+
+    EnableReminder INTEGER NOT NULL DEFAULT 0,
+
+    ReminderTime TEXT DEFAULT '20:00',
+
+    -------------------------------------------------------
+    -- SYSTEM
+    -------------------------------------------------------
+
+    DatabaseVersion INTEGER NOT NULL DEFAULT 1,
+
+    CreatedAt TEXT NOT NULL DEFAULT(datetime('now','localtime')),
+
+    UpdatedAt TEXT NOT NULL DEFAULT(datetime('now','localtime'))
+);
+
+---------------------------------------------------------------
+---------------------------------------------------------------
+
+INSERT INTO AppSettings(Id)
+VALUES(1);
+
+-- ============================================================
+-- CATEGORY
+-- Phân loại Packet
+-- Ví dụ:
+-- TOEIC
+-- IELTS
+-- Business
+-- Travel
+-- Daily Conversation
+-- ============================================================
+
+CREATE TABLE Categories (
+
+    -- GUID
+    Id TEXT PRIMARY KEY,
+
+    -- Tên danh mục
+    Name TEXT NOT NULL UNIQUE,
+
+    -- Mô tả
+    Description TEXT,
+
+    -- Màu hiển thị
+    Color TEXT,
+
+    -- Icon
+    Icon TEXT,
+
+    -- Thứ tự hiển thị
+    DisplayOrder INTEGER NOT NULL DEFAULT 0,
+
+    -- Ngày tạo
+    CreatedAt TEXT NOT NULL DEFAULT(datetime('now','localtime'))
+);
+
+-- ============================================================
+-- PACKETS
+-- Gói từ vựng
+-- ============================================================
+
+CREATE TABLE Packets (
+
+    -- GUID
+    Id TEXT PRIMARY KEY,
+
+    -- Danh mục
+    CategoryId TEXT NOT NULL,
+
+    -- Tên Packet
+    Name TEXT NOT NULL,
+
+    -- Mô tả
+    Description TEXT,
+
+    -- Yêu thích
+    IsFavorite INTEGER NOT NULL DEFAULT 0,
+
+    -- Hiển thị trên Dashboard
+    IsPinned INTEGER NOT NULL DEFAULT 0,
+
+    -- Đã hoàn thành
+    IsCompleted INTEGER NOT NULL DEFAULT 0,
+
+    -- Ngày tạo
+    CreatedAt TEXT NOT NULL DEFAULT(datetime('now','localtime')),
+
+    -- Ngày cập nhật
+    UpdatedAt TEXT NOT NULL DEFAULT(datetime('now','localtime')),
+
+    FOREIGN KEY(CategoryId)
+        REFERENCES Categories(Id)
+        ON DELETE CASCADE
+);
+
+-- ============================================================
+-- VOCABULARIES
+-- Danh sách từ vựng
+-- ============================================================
+
+CREATE TABLE Vocabularies (
+
+    -- GUID
+    Id TEXT PRIMARY KEY,
+
+    -- Packet chứa từ
+    PacketId TEXT NOT NULL,
+
+    -- Từ
+    Word TEXT NOT NULL,
+
+    -- Loại từ
+    WordType TEXT,
+
+    -- Nghĩa
+    Meaning TEXT NOT NULL,
+
+    -- Phiên âm IPA
+    Phonetic TEXT,
+
+    -- Ví dụ
+    Example TEXT,
+
+    -- Nghĩa của ví dụ
+    ExampleMeaning TEXT,
+
+    -- Độ khó
+    -- 1 -> 5
+    Difficulty INTEGER NOT NULL DEFAULT 1
+        CHECK(Difficulty BETWEEN 1 AND 5),
+
+    -- Số lần xem
+    ViewCount INTEGER NOT NULL DEFAULT 0,
+
+    -- Ngày tạo
+    CreatedAt TEXT NOT NULL DEFAULT(datetime('now','localtime')),
+
+    -- Ngày cập nhật
+    UpdatedAt TEXT NOT NULL DEFAULT(datetime('now','localtime')),
+
+    FOREIGN KEY(PacketId)
+        REFERENCES Packets(Id)
+        ON DELETE CASCADE
+);
+
+-- ============================================================
+-- WORD PROGRESS
+-- Thuật toán SM-2
+-- Mỗi từ chỉ có một tiến trình học
+-- ============================================================
+
+CREATE TABLE WordProgress (
+
+    -- Khóa chính đồng thời là khóa ngoại
+    VocabularyId TEXT PRIMARY KEY,
+
+    -- Hệ số Ease Factor
+    EaseFactor REAL NOT NULL DEFAULT 2.5,
+
+    -- Khoảng cách ôn (ngày)
+    Interval INTEGER NOT NULL DEFAULT 0,
+
+    -- Số lần ôn thành công
+    Repetitions INTEGER NOT NULL DEFAULT 0,
+
+    -- Ngày cần ôn tiếp
+    NextReviewDate TEXT NOT NULL,
+
+    -- Ngày ôn gần nhất
+    LastReviewedDate TEXT,
+
+    -- Trạng thái
+    -- 0 = New
+    -- 1 = Learning
+    -- 2 = Review
+    -- 3 = Mastered
+    State INTEGER NOT NULL DEFAULT 0
+        CHECK(State BETWEEN 0 AND 3),
+
+    -- Số lần đúng
+    CorrectCount INTEGER NOT NULL DEFAULT 0,
+
+    -- Số lần sai
+    WrongCount INTEGER NOT NULL DEFAULT 0,
+
+    FOREIGN KEY(VocabularyId)
+        REFERENCES Vocabularies(Id)
+        ON DELETE CASCADE
+);
+-- ============================================================
+-- STUDY SESSIONS
+-- Lưu thống kê từng phiên học
+-- ============================================================
+
+CREATE TABLE StudySessions (
+
+    -- GUID
+    Id TEXT PRIMARY KEY,
+
+    -- Ngày học
+    SessionDate TEXT NOT NULL
+        DEFAULT(date('now','localtime')),
+
+    -- Thời gian học (phút)
+    Duration INTEGER NOT NULL DEFAULT 0,
+
+    -- Tổng số từ đã học trong phiên
+    WordsReviewed INTEGER NOT NULL DEFAULT 0,
+
+    -- Số từ mới
+    NewWordCount INTEGER NOT NULL DEFAULT 0,
+
+    -- Số từ ôn tập
+    ReviewWordCount INTEGER NOT NULL DEFAULT 0,
+
+    -- XP nhận được
+    XPEarned INTEGER NOT NULL DEFAULT 0,
+
+    -- Ghi chú (tùy chọn)
+    Note TEXT,
+
+    -- Ngày tạo
+    CreatedAt TEXT NOT NULL DEFAULT(datetime('now','localtime'))
+);
+
+-- ============================================================
+-- QUIZ HISTORIES
+-- Lưu lịch sử làm Quiz
+-- ============================================================
+
+CREATE TABLE QuizHistories (
+
+    -- GUID
+    Id TEXT PRIMARY KEY,
+
+    -- Packet đã làm
+    PacketId TEXT,
+	QuizScope TEXT NOT NULL DEFAULT 'Packet', -- 'Packet', 'SpacedRepetition', 'All',
+    -- Loại Quiz
+    -- 1 = Word -> Meaning
+    -- 2 = Meaning -> Word
+    QuizType INTEGER NOT NULL
+        CHECK(QuizType IN (1,2)),
+
+    -- Tổng số câu
+    TotalQuestions INTEGER NOT NULL,
+
+    -- Số câu đúng
+    CorrectAnswers INTEGER NOT NULL,
+
+    -- Số câu sai
+    WrongAnswers INTEGER NOT NULL,
+
+    -- Điểm (%)
+    Score INTEGER NOT NULL
+        CHECK(Score BETWEEN 0 AND 100),
+
+    -- Thời gian làm bài (giây)
+    Duration INTEGER NOT NULL DEFAULT 0,
+
+    -- XP nhận được
+    XPEarned INTEGER NOT NULL DEFAULT 0,
+
+    -- Thời gian tạo
+    CreatedAt TEXT NOT NULL
+        DEFAULT(datetime('now','localtime')),
+
+    FOREIGN KEY(PacketId)
+        REFERENCES Packets(Id)
+        ON DELETE SET NULL
+);
+
+-- ============================================================
+-- ACHIEVEMENTS
+-- Thành tựu đã mở khóa
+-- ============================================================
+
+CREATE TABLE Achievements (
+
+    -- GUID
+    Id TEXT PRIMARY KEY,
+
+    -- Mã thành tựu
+    Code TEXT NOT NULL UNIQUE,
+
+    -- Tên
+    Name TEXT NOT NULL,
+
+    -- Mô tả
+    Description TEXT,
+
+    -- Icon
+    Icon TEXT,
+
+    -- XP thưởng
+    RewardXP INTEGER NOT NULL DEFAULT 0,
+
+    -- Đã mở khóa chưa
+    IsUnlocked INTEGER NOT NULL DEFAULT 0,
+
+    -- Ngày mở khóa
+    UnlockedAt TEXT
+);
+
+-- ============================================================
+-- INDEXES
+-- ============================================================
+
+-- Study Session
+CREATE INDEX IDX_StudySessions_Date
+ON StudySessions(SessionDate);
+
+-- Quiz
+CREATE INDEX IDX_QuizHistories_Date
+ON QuizHistories(CreatedAt);
+
+CREATE INDEX IDX_QuizHistories_Packet
+ON QuizHistories(PacketId);
+
+-- Achievement
+CREATE INDEX IDX_Achievements_Code
+ON Achievements(Code);
+
+-- ============================================================
+-- INDEX
+-- ============================================================
+
+CREATE INDEX IDX_Categories_Name
+ON Categories(Name);
+
+CREATE INDEX IDX_Packets_Category
+ON Packets(CategoryId);
+
+CREATE INDEX IDX_Vocabularies_Packet
+ON Vocabularies(PacketId);
+
+CREATE INDEX IDX_Vocabularies_Word
+ON Vocabularies(Word);
+
+CREATE INDEX IDX_WordProgress_ReviewDate
+ON WordProgress(NextReviewDate);
+
+CREATE INDEX IDX_WordProgress_State
+ON WordProgress(State);

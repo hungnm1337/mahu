@@ -1,13 +1,79 @@
-﻿<Window x:Class="Mahu.MainWindow"
+<ui:FluentWindow x:Class="Mahu.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Mahu"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:pages="clr-namespace:Mahu.Views.Pages"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid Margin="16">
-        <!-- Example Material Design control to verify configuration -->
-        <Button Content="Click me" Style="{StaticResource MaterialDesignRaisedButton}" Width="120" Height="36" />
+        Title="Mahu Dashboard" Height="600" Width="1000"
+        WindowBackdropType="None"
+        Background="#F0F2F5"
+        ExtendsContentIntoTitleBar="True"
+        WindowState="Maximized"
+        Loaded="Window_Loaded">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER AREA (Hoàn toàn bên trên) -->
+        <Border Grid.Row="0" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1" Background="White">
+            <ui:TitleBar Title="Mahu">
+                <ui:TitleBar.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Right content: XP, Streak, Display Name -->
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
+                            
+                            <!-- XP Badge -->
+                            <Border Background="#FFF8DC" CornerRadius="6" Padding="12,6" Margin="0,0,12,0" BorderBrush="#FFD700" BorderThickness="1">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Star24" Foreground="#DAA520" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="txtXP" Text="0 XP" FontWeight="Bold" Foreground="#B8860B" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Streak Badge -->
+                            <Border Background="#FFE4E1" CornerRadius="6" Padding="12,6" Margin="0,0,12,0" BorderBrush="#FF4500" BorderThickness="1">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Flash24" Foreground="#FF4500" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="txtStreak" Text="0 Days" FontWeight="Bold" Foreground="#FF4500" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Display Name Badge -->
+                            <Border Background="#F0F0F0" CornerRadius="6" Padding="12,6" BorderBrush="#CCCCCC" BorderThickness="1">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Person24" Margin="0,0,6,0" VerticalAlignment="Center" Foreground="#555555"/>
+                                    <TextBlock x:Name="txtDisplayName" Text="User" FontWeight="Bold" VerticalAlignment="Center" Foreground="#333333"/>
+                                </StackPanel>
+                            </Border>
+
+                        </StackPanel>
+                    </Grid>
+                </ui:TitleBar.Header>
+            </ui:TitleBar>
+        </Border>
+
+        <!-- NAVIGATION MENU & PAGE CONTENT -->
+        <ui:NavigationView Grid.Row="1" x:Name="RootNavigation" PaneDisplayMode="Left" OpenPaneLength="200" Background="Transparent">
+            <ui:NavigationView.Resources>
+                <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected" Color="#E5F1FB" />
+                <SolidColorBrush x:Key="NavigationViewItemForegroundSelected" Color="#005FB8" />
+            </ui:NavigationView.Resources>
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="Analysis" Icon="{ui:SymbolIcon DataBarHorizontal24}" TargetPageType="{x:Type pages:AnalysisPage}" />
+                <ui:NavigationViewItem Content="Packet" Icon="{ui:SymbolIcon Folder24}" TargetPageType="{x:Type pages:PacketPage}" />
+                <ui:NavigationViewItem Content="Vocabulary" Icon="{ui:SymbolIcon TextSortAscending24}" TargetPageType="{x:Type pages:VocabularyPage}" />
+                <ui:NavigationViewItem Content="Quiz History" Icon="{ui:SymbolIcon History24}" TargetPageType="{x:Type pages:QuizHistoryPage}" />
+            </ui:NavigationView.MenuItems>
+        </ui:NavigationView>
     </Grid>
-</Window>
+</ui:FluentWindow>

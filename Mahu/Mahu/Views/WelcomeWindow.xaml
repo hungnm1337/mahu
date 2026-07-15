@@ -1,0 +1,50 @@
+<ui:FluentWindow x:Class="Mahu.Views.WelcomeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="Chào mừng" Height="250" Width="400"
+        WindowStartupLocation="CenterScreen" 
+        WindowBackdropType="Mica"
+        ExtendsContentIntoTitleBar="True">
+
+    <Grid>
+        <ui:TitleBar Title="Thiết lập" Margin="0,0,0,0" VerticalAlignment="Top"/>
+        
+        <ui:Card Margin="20,40,20,20" VerticalAlignment="Center">
+            <StackPanel>
+                <!-- Icon -->
+                <ui:SymbolIcon Symbol="HandWave24" FontSize="48" 
+                               Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" 
+                               HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                
+                <!-- Question -->
+                <TextBlock Text="Chúng tôi có thể gọi bạn là gì?" 
+                           FontSize="18" FontWeight="Medium" 
+                           HorizontalAlignment="Center" Margin="0,0,0,16" />
+                
+                <!-- Input -->
+                <ui:TextBox x:Name="txtName" 
+                         PlaceholderText="Nhập tên của bạn" 
+                         FontSize="16" Margin="0,0,0,8" 
+                         KeyDown="txtName_KeyDown" />
+                
+                <!-- Status Message -->
+                <TextBlock x:Name="txtStatus" 
+                           FontSize="12" 
+                           HorizontalAlignment="Center" 
+                           Margin="0,0,0,16" 
+                           Visibility="Collapsed" />
+                
+                <!-- Button -->
+                <ui:Button x:Name="btnSave" 
+                        Content="Bắt đầu" 
+                        Appearance="Primary"
+                        HorizontalAlignment="Stretch"
+                        Click="btnSave_Click" />
+            </StackPanel>
+        </ui:Card>
+    </Grid>
+</ui:FluentWindow>

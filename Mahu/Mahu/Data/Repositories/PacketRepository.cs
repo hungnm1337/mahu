@@ -51,6 +51,29 @@ public static class PacketRepository
         return reader.Read() ? MapReader(reader) : null;
     }
 
+    /// <summary>Tìm một packet theo Tên (không phân biệt hoa thường).</summary>
+    public static Packet? FindByName(string name, string? excludeId = null)
+    {
+        using var conn = AppDbContext.CreateConnection();
+        conn.Open();
+        using var cmd = conn.CreateCommand();
+        
+        if (excludeId == null)
+        {
+            cmd.CommandText = "SELECT * FROM Packets WHERE Name = $name COLLATE NOCASE";
+            cmd.Parameters.AddWithValue("$name", name);
+        }
+        else
+        {
+            cmd.CommandText = "SELECT * FROM Packets WHERE Name = $name COLLATE NOCASE AND Id != $excludeId";
+            cmd.Parameters.AddWithValue("$name", name);
+            cmd.Parameters.AddWithValue("$excludeId", excludeId);
+        }
+
+        using var reader = cmd.ExecuteReader();
+        return reader.Read() ? MapReader(reader) : null;
+    }
+
     /// <summary>Lấy danh sách packet được đánh dấu yêu thích.</summary>
     public static List<Packet> GetFavorites()
     {

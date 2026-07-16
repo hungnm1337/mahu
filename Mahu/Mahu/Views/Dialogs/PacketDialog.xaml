@@ -1,0 +1,55 @@
+<Window x:Class="Mahu.Views.Dialogs.PacketDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Packet" Height="400" Width="400"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="White"
+        WindowStyle="ToolWindow">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Quản lý Packet" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,20" Grid.Row="0"/>
+
+        <TextBlock Text="Tên Packet *" Style="{StaticResource InputLabelStyle}" Grid.Row="1"/>
+        <Border Grid.Row="2" Style="{StaticResource InputBorderCardStyle}" Margin="0,0,0,15">
+            <ui:TextBox x:Name="txtName" PlaceholderText="Nhập tên packet..." Style="{StaticResource BorderlessInputStyle}"/>
+        </Border>
+
+        <TextBlock Text="Mô tả" Style="{StaticResource InputLabelStyle}" Grid.Row="3"/>
+        <Border Grid.Row="4" Style="{StaticResource InputBorderCardStyle}" Margin="0,0,0,15">
+            <ui:TextBox x:Name="txtDescription" PlaceholderText="Mô tả ngắn gọn..." TextWrapping="Wrap" MinLines="3" MaxLines="3" Style="{StaticResource BorderlessInputStyle}"/>
+        </Border>
+
+        <Grid Grid.Row="5" Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0" Margin="0,0,15,0">
+                <TextBlock Text="Danh mục" Style="{StaticResource InputLabelStyle}"/>
+                <Border Style="{StaticResource InputBorderCardStyle}">
+                    <ComboBox x:Name="cboCategory" DisplayMemberPath="Name" SelectedValuePath="Id" Style="{StaticResource BorderlessInputStyle}"/>
+                </Border>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,5">
+                <CheckBox x:Name="chkFavorite" Content="⭐ Yêu thích" FontWeight="SemiBold"/>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right">
+            <ui:Button Content="Hủy" Margin="0,0,10,0" Click="BtnCancel_Click"/>
+            <ui:Button Content="Lưu" Appearance="Primary" Click="BtnSave_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -5,11 +5,12 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="PacketPage">
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="PacketPage"
+      Loaded="Page_Loaded">
 
     <Grid Background="White">
-        <!-- Shadow từ Menu đổ sang (dùng Gradient thông minh để không bị lỗi layout) -->
+        <!-- Shadow từ Menu đổ sang -->
         <Rectangle HorizontalAlignment="Left" Width="10" Panel.ZIndex="999">
             <Rectangle.Fill>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -19,6 +20,94 @@
             </Rectangle.Fill>
         </Rectangle>
         
-        <TextBlock Text="Packet Page" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <TextBlock Text="Quản lý Packet" FontSize="28" FontWeight="Bold" Margin="0,0,0,20"/>
+
+            <!-- Toolbar -->
+            <Grid Grid.Row="1" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <ui:TextBox x:Name="txtSearch" PlaceholderText="Tìm kiếm packet..." 
+                            Icon="{ui:SymbolIcon Search24}" Margin="0,0,10,0"
+                            TextChanged="TxtSearch_TextChanged"/>
+                            
+                <ComboBox x:Name="cboCategory" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="Id"
+                          Margin="0,0,10,0" SelectionChanged="CboCategory_SelectionChanged"/>
+
+                <ui:Button Grid.Column="3" Content="+ Packet mới" Appearance="Primary" Margin="0,0,10,0" Click="BtnAddPacket_Click"/>
+                <ui:Button Grid.Column="4" Content="Import Excel" Icon="{ui:SymbolIcon ArrowImport24}" Appearance="Secondary" Click="BtnImportExcel_Click"/>
+            </Grid>
+
+            <!-- Packets WrapPanel inside ScrollViewer -->
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="icPackets">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <!-- Card cho từng Packet -->
+                            <Border Width="240" Height="140" Margin="0,0,15,15" Background="#FFFFFF" 
+                                    BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8">
+                                <!-- Thêm hiệu ứng Shadow khi hover hoặc shadow nhẹ -->
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="8" ShadowDepth="2" Direction="270" Opacity="0.05" Color="Black"/>
+                                </Border.Effect>
+                                
+                                <Grid Margin="15">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Top: Category & Favorite -->
+                                    <Grid>
+                                        <TextBlock Text="{Binding CategoryName}" FontSize="12" Foreground="#888888"/>
+                                        <ui:SymbolIcon Symbol="Star24" Foreground="#FFC107" HorizontalAlignment="Right" 
+                                                       Visibility="{Binding IsFavorite, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    </Grid>
+
+                                    <!-- Middle: Name & Count -->
+                                    <StackPanel Grid.Row="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Packet.Name}" FontSize="18" FontWeight="Bold" 
+                                                   TextTrimming="CharacterEllipsis" Margin="0,0,0,5"/>
+                                        <TextBlock Text="{Binding WordCount, StringFormat='{}{0} từ vựng'}" 
+                                                   FontSize="13" Foreground="#666666"/>
+                                    </StackPanel>
+
+                                    <!-- Bottom: Actions -->
+                                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <ui:Button Appearance="Transparent" Padding="4" Margin="0,0,5,0" 
+                                                   CommandParameter="{Binding Packet}" Click="BtnEditPacket_Click">
+                                            <ui:SymbolIcon Symbol="Edit24" FontSize="16" Foreground="#005FB8"/>
+                                        </ui:Button>
+                                        <ui:Button Appearance="Transparent" Padding="4" 
+                                                   CommandParameter="{Binding Packet}" Click="BtnDeletePacket_Click">
+                                            <ui:SymbolIcon Symbol="Delete24" FontSize="16" Foreground="#D13438"/>
+                                        </ui:Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Page>

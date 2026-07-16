@@ -1,0 +1,69 @@
+<Window x:Class="Mahu.Views.Dialogs.ImportExcelDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Import từ Excel" Height="600" Width="800"
+        WindowStartupLocation="CenterOwner"
+        Background="White"
+        WindowStyle="ToolWindow">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Import từ file Excel" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,10" Grid.Row="0"/>
+
+        <!-- File Selection -->
+        <Grid Grid.Row="1" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Border Grid.Column="0" Style="{StaticResource InputBorderCardStyle}" Margin="0,0,10,0">
+                <ui:TextBox x:Name="txtFilePath" IsReadOnly="True" PlaceholderText="Chưa chọn file..." Style="{StaticResource BorderlessInputStyle}"/>
+            </Border>
+            
+            <ui:Button Grid.Column="1" Content="Chọn file..." Margin="0,0,10,0" Click="BtnBrowse_Click"/>
+            <ui:Button Grid.Column="2" Content="Tải file mẫu" Appearance="Secondary" Click="BtnDownloadTemplate_Click"/>
+        </Grid>
+
+        <!-- Preview Area -->
+        <Border Grid.Row="2" Style="{StaticResource PreviewBorderCardStyle}" Margin="0,0,0,20">
+            <Grid>
+                <!-- Default empty state -->
+                <TextBlock x:Name="txtEmptyState" Text="Chọn file Excel để xem trước nội dung" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#999999" FontSize="14"/>
+                
+                <!-- TabControl for sheets -->
+                <TabControl x:Name="tabPreview" Visibility="Collapsed" Background="Transparent" BorderThickness="0">
+                    <TabControl.ItemContainerStyle>
+                        <Style TargetType="TabItem">
+                            <Setter Property="Padding" Value="15,10"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                        </Style>
+                    </TabControl.ItemContainerStyle>
+                </TabControl>
+            </Grid>
+        </Border>
+
+        <!-- Action Buttons -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock x:Name="txtStatus" VerticalAlignment="Center" Foreground="#666666"/>
+            
+            <ui:Button Grid.Column="1" Content="Hủy" Margin="0,0,10,0" Click="BtnCancel_Click"/>
+            <ui:Button x:Name="btnImport" Grid.Column="2" Content="Import" Appearance="Primary" IsEnabled="False" Click="BtnImport_Click"/>
+        </Grid>
+    </Grid>
+</Window>

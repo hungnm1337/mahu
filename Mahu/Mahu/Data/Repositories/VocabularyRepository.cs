@@ -212,6 +212,17 @@ public static class VocabularyRepository
         cmd.ExecuteNonQuery();
     }
 
+    /// <summary>Xóa toàn bộ từ vựng thuộc về một Packet (dùng khi overwrite import).</summary>
+    public static void DeleteByPacketId(string packetId)
+    {
+        using var conn = AppDbContext.CreateConnection();
+        conn.Open();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = "DELETE FROM Vocabularies WHERE PacketId = $packetId";
+        cmd.Parameters.AddWithValue("$packetId", packetId);
+        cmd.ExecuteNonQuery();
+    }
+
     /// <summary>Tăng ViewCount lên 1 mỗi khi từ được xem/ôn.</summary>
     public static void IncrementViewCount(string id)
     {

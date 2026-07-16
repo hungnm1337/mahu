@@ -68,12 +68,20 @@
                 <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected" Color="#E5F1FB" />
                 <SolidColorBrush x:Key="NavigationViewItemForegroundSelected" Color="#005FB8" />
             </ui:NavigationView.Resources>
+            
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="Analysis" Icon="{ui:SymbolIcon DataBarHorizontal24}" TargetPageType="{x:Type pages:AnalysisPage}" />
+                <ui:NavigationViewItem Content="Study" Icon="{ui:SymbolIcon Play24}" TargetPageType="{x:Type pages:StudyPage}" />
+                <ui:NavigationViewItem Content="Categories" Icon="{ui:SymbolIcon Collections24}" TargetPageType="{x:Type pages:CategoryPage}" />
                 <ui:NavigationViewItem Content="Packet" Icon="{ui:SymbolIcon Folder24}" TargetPageType="{x:Type pages:PacketPage}" />
                 <ui:NavigationViewItem Content="Vocabulary" Icon="{ui:SymbolIcon TextSortAscending24}" TargetPageType="{x:Type pages:VocabularyPage}" />
+                <ui:NavigationViewItem Content="Achievements" Icon="{ui:SymbolIcon Trophy24}" TargetPageType="{x:Type pages:AchievementPage}" />
                 <ui:NavigationViewItem Content="Quiz History" Icon="{ui:SymbolIcon History24}" TargetPageType="{x:Type pages:QuizHistoryPage}" />
             </ui:NavigationView.MenuItems>
+            
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem Content="Settings" Icon="{ui:SymbolIcon Settings24}" TargetPageType="{x:Type pages:SettingsPage}" />
+            </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
     </Grid>
 </ui:FluentWindow>

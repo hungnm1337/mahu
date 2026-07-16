@@ -40,6 +40,15 @@ public static class DatabaseInitializer
             cmd.CommandText = SchemaSQL;
             cmd.ExecuteNonQuery();
 
+            // Seed Category mặc định
+            cmd.CommandText = """
+                INSERT INTO Categories (Id, Name, Description, Color, Icon, DisplayOrder)
+                SELECT $Id, 'Chung', 'Danh mục chung', '#808080', 'Folder24', 0
+                WHERE NOT EXISTS (SELECT 1 FROM Categories WHERE Name = 'Chung');
+                """;
+            cmd.Parameters.AddWithValue("$Id", Guid.NewGuid().ToString());
+            cmd.ExecuteNonQuery();
+
             transaction.Commit();
         }
         catch
